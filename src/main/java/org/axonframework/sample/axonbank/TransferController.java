@@ -4,18 +4,18 @@ import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.sample.axonbank.coreapi.CreateAccountCommand;
 import org.axonframework.sample.axonbank.coreapi.RequestMoneyTransferCommand;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+
+@RestController
 public class TransferController {
 
     @Autowired
     private CommandGateway commandGateway;
 
-    @RequestMapping("/")
-    @ResponseBody
+    @GetMapping("/init")
     public String sendMessage() {
 
         commandGateway.send(new CreateAccountCommand("1234", 1000), LoggingCallback.INSTANCE);
@@ -23,5 +23,22 @@ public class TransferController {
         commandGateway.send(new RequestMoneyTransferCommand("tf1", "1234", "4321", 100), LoggingCallback.INSTANCE);
 
         return "OK";
+    }
+
+    @GetMapping("/transfer/{sourceAccount}/{destinationAccount}/{amount}")
+    public CompletableFuture<Object> transfer(@PathVariable String sourceAccount, @PathVariable String destinationAccount, @PathVariable int amount) {
+        String transferId = UUID.randomUUID().toString();
+        return commandGateway.send(new RequestMoneyTransferCommand(transferId, sourceAccount, destinationAccount, amount))
+                .exceptionally(e -> e);
+    }
+
+    @GetMapping("/create/{accountId}/{overdraftLimit}")
+    public CompletableFuture<Object> createAccount(@PathVariable String accountId, @PathVariable int overdraftLimit) {
+        return commandGateway.send(new CreateAccountCommand(accountId, overdraftLimit));
+    }
+
+    @GetMapping("/create/{overdraftLimit}")
+    public CompletableFuture<Object> createAccount(@PathVariable int overdraftLimit) {
+        return createAccount(UUID.randomUUID().toString(), overdraftLimit);
     }
 }

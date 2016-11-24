@@ -13,8 +13,6 @@ import org.axonframework.spring.stereotype.Saga;
 
 import javax.inject.Inject;
 
-import java.util.UUID;
-
 import static org.axonframework.eventhandling.saga.SagaLifecycle.end;
 
 @Saga
@@ -24,17 +22,15 @@ public class MoneyTransferSaga {
     private transient CommandGateway commandGateway;
 
     private String targetAccount;
-    private String transactionId;
     private String transferId;
 
     @StartSaga
     @SagaEventHandler(associationProperty = "transferId")
     public void on(MoneyTransferRequestedEvent event) {
         targetAccount = event.getTargetAccount();
-        transactionId = UUID.randomUUID().toString();
         transferId = event.getTransferId();
-        SagaLifecycle.associateWith("transactionId", transactionId);
-        commandGateway.send(new WithdrawMoneyCommand(event.getSourceAccount(), transactionId, event.getAmount()),
+        SagaLifecycle.associateWith("transactionId", transferId);
+        commandGateway.send(new WithdrawMoneyCommand(event.getSourceAccount(), transferId, event.getAmount()),
                             new CommandCallback<WithdrawMoneyCommand, Object>() {
                                 @Override
                                 public void onSuccess(CommandMessage<? extends WithdrawMoneyCommand> commandMessage, Object result) {
