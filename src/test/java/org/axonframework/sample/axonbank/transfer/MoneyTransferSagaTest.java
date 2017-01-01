@@ -18,14 +18,14 @@ public class MoneyTransferSagaTest {
         fixture.givenNoPriorActivity()
                 .whenPublishingA(new MoneyTransferRequestedEvent("tf1", "acct1", "acct2", 100))
                 .expectActiveSagas(1)
-                .expectDispatchedCommandsEqualTo(new WithdrawMoneyCommand("acct1", "tf1", 100));
+                .expectDispatchedCommands(new WithdrawMoneyCommand("acct1", "tf1", 100));
     }
 
     @Test
     public void testDepositMoneyAfterWithdrawal() throws Exception {
         fixture.givenAPublished(new MoneyTransferRequestedEvent("tf1", "acct1", "acct2", 100))
                 .whenPublishingA(new MoneyWithdrawnEvent("acct1", "tf1", 100, 500))
-                .expectDispatchedCommandsEqualTo(new DepositMoneyCommand("acct2", "tf1", 100));
+                .expectDispatchedCommands(new DepositMoneyCommand("acct2", "tf1", 100));
 
     }
 
@@ -34,7 +34,7 @@ public class MoneyTransferSagaTest {
         fixture.givenAPublished(new MoneyTransferRequestedEvent("tf1", "acct1", "acct2", 100))
                 .andThenAPublished(new MoneyWithdrawnEvent("acct1", "tf1", 100, 500))
                 .whenPublishingA(new MoneyDepositedEvent("acct2", "tf1", 100, 400))
-                .expectDispatchedCommandsEqualTo(new CompleteMoneyTransferCommand("tf1"));
+                .expectDispatchedCommands(new CompleteMoneyTransferCommand("tf1"));
 
     }
 

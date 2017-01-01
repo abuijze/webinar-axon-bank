@@ -1,6 +1,5 @@
 package org.axonframework.sample.axonbank.query;
 
-import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.sample.axonbank.coreapi.MoneyDepositedEvent;
 import org.axonframework.sample.axonbank.coreapi.MoneyWithdrawnEvent;
@@ -10,8 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
-import static org.springframework.data.domain.Example.*;
 
 @RestController
 public class TransactionHistoryEventHandler {

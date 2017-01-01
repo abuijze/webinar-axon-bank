@@ -23,6 +23,8 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
         <kotlin.version>1.0.3</kotlin.version>
+            <!-- The main class to start by executing java -jar -->
+        <start-class>org.axonframework.sample.axonbank.AxonBankApplication</start-class>
     </properties>
 
 	<dependencies>
@@ -51,13 +53,13 @@
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-test</artifactId>
-            <version>3.0-RC1</version>
+            <version>3.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-spring-boot-starter</artifactId>
-            <version>3.0-RC1</version>
+            <version>3.0</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
